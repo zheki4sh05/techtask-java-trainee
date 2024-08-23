@@ -1,6 +1,6 @@
 # Spring boot, PostgresSQL, Docker REST API
 
-A simple Spring boot application that demonstrates the usage of REST API using Spring boot, Spring JPA and PostgreSQL. 
+A simple Spring boot application that demonstrates the usage of REST API using Spring boot, Hibernate and PostgreSQL. 
 
 ## Tools and Technologies used
 
