@@ -1,12 +1,10 @@
 package com.example.techtask.controller;
 
 import com.example.techtask.model.*;
-import com.example.techtask.repository.*;
+
 import com.example.techtask.service.impl.*;
 import com.fasterxml.jackson.core.type.*;
 import com.fasterxml.jackson.databind.*;
-import lombok.*;
-import org.apache.tomcat.util.http.parser.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.*;
@@ -15,10 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.*;
 import org.springframework.test.web.servlet.request.*;
 import org.springframework.test.web.servlet.result.*;
-
 import java.util.*;
-import java.util.function.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -57,10 +52,10 @@ class UserControllerTest {
         User user = objectMapper.readValue(resultStr, User.class);
 
         assertAll(
-                ()->{assertNotEquals( new User(), user);},
-                ()->{assertNotEquals(null, user);},
-                ()->{assertNotEquals( null, userService.findUser());},
-                ()->{assertNotEquals( new User(), userService.findUser());}
+                ()-> assertNotEquals( new User(), user),
+                ()-> assertNotEquals(null, user),
+                ()-> assertNotEquals( null, userService.findUser()),
+                ()->assertNotEquals( new User(), userService.findUser())
         );
     }
 
@@ -80,12 +75,10 @@ class UserControllerTest {
 
 
         assertAll(
-                ()->{assertNotEquals( null, userService.findUsers());},
-                ()->{assertNotEquals(0,userService.findUsers().size());},
-                ()->{assertNotEquals( null, userList);},
-                ()->{assertNotEquals(0,userList.size());}
-
-
+                ()->assertNotEquals( null, userService.findUsers()),
+                ()->assertNotEquals(0,userService.findUsers().size()),
+                ()->assertNotEquals( null, userList),
+                ()->assertNotEquals(0,userList.size())
         );
     }
 

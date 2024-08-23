@@ -1,10 +1,10 @@
 package com.example.techtask.service.impl;
 
 import com.example.techtask.model.*;
-import com.example.techtask.repository.*;
+
 import com.example.techtask.service.*;
+import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
@@ -12,27 +12,52 @@ import java.util.*;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-
-    private final OrderRepository orderRepository;
+    @Autowired
+    private EntityManager entityManager;
 
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public OrderServiceImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
     public Order findOrder() {
 
-        Order order = orderRepository.findByQuantityAndDate();
+        String sql = """
 
-        return  order!=null ? order : new Order();
+            select o from Order o
+            where o.quantity>1
+            ORDER BY o.createdAt DESC
+            LIMIT 1
+
+""";
+        TypedQuery<Order> query = entityManager.createQuery(sql, Order.class);
+
+        try {
+            return  query.getSingleResult();
+        } catch (NoResultException e) {
+            return new Order();
+        }
+
     }
 
     @Override
     public List<Order> findOrders() {
 
-        List<Order> orders = orderRepository.findAllByStatusAndDate();
-        return orders!=null ? orders : new ArrayList<Order>();
+        String sql = """
+            select o from Order o
+            join User u on u.id = o.userId
+            where u.userStatus = 'ACTIVE'
+            ORDER BY o.createdAt
+""";
+
+        TypedQuery<Order> query = entityManager.createQuery(sql, Order.class);
+
+        try {
+            return  query.getResultList();
+        } catch (NoResultException e) {
+            return new ArrayList<>();
+        }
     }
 }

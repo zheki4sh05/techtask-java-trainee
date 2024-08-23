@@ -1,40 +1,63 @@
 package com.example.techtask.service.impl;
 
 import com.example.techtask.model.*;
-import com.example.techtask.repository.*;
+
 import com.example.techtask.service.*;
-import org.hibernate.*;
+import jakarta.persistence.*;
+
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.jdbc.core.*;
-import org.springframework.orm.hibernate5.*;
+
+
 import org.springframework.stereotype.*;
 
-import java.sql.*;
 import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
+    private EntityManager entityManager;
     @Override
     public User findUser() {
 
-        User user = userRepository.findUserByOrderYearAndTotalPrice();
+        String sql = """
+                
+                SELECT u
+                FROM User u
+                         JOIN Order o ON u.id = o.userId
+                WHERE YEAR(o.createdAt) = 2003
+                GROUP BY u.id, u.email
+                ORDER BY SUM(o.price * o.quantity) DESC
+                LIMIT 1
+                """;
 
-        return user!=null ? user : new User();
+        TypedQuery<User> query = entityManager.createQuery(sql, User.class);
+
+        try {
+            return  query.getSingleResult();
+        } catch (NoResultException e) {
+            return new User();
+        }
 
     }
 
     @Override
     public List<User> findUsers() {
-        List<User> userList = userRepository.findUsersByOrderYearAndStatus();
 
-        return userList !=null ? userList : new ArrayList<User>();
+        String sql = """
+            select u
+             from User u
+            join Order o on u.id = o.userId
+            where YEAR(o.createdAt) = 2010 and o.orderStatus='PAID'
+""";
+
+        TypedQuery<User> query = entityManager.createQuery(sql, User.class);
+
+        try {
+            return  query.getResultList();
+        } catch (NoResultException e) {
+            return new ArrayList<>();
+        }
 
     }
 }

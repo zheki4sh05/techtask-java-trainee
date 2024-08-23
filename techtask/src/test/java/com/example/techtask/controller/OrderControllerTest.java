@@ -25,7 +25,6 @@ class OrderControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-
     @Autowired
     OrderServiceImpl orderService;
 
@@ -50,10 +49,10 @@ class OrderControllerTest {
         Order order = objectMapper.readValue(resultStr, Order.class);
 
         assertAll(
-                ()->{assertNotEquals( new Order(), order);},
-                ()->{assertNotEquals(null, order);},
-                ()->{assertNotEquals( null, orderService.findOrder());},
-                ()->{assertNotEquals( new Order(), orderService.findOrder());}
+                ()->assertNotEquals( new Order(), order),
+                ()->assertNotEquals(null, order),
+                ()->assertNotEquals( null, orderService.findOrder()),
+                ()->assertNotEquals( new Order(), orderService.findOrder())
         );
     }
 
@@ -73,10 +72,10 @@ class OrderControllerTest {
 
 
         assertAll(
-                ()->{assertNotEquals( null, orderService.findOrders());},
-                ()->{assertNotEquals(0,orderService.findOrders().size());},
-                ()->{assertNotEquals( null, orderList);},
-                ()->{assertNotEquals(0,orderList.size());}
+                ()-> assertNotEquals( null, orderService.findOrders()),
+                ()-> assertNotEquals(0,orderService.findOrders().size()),
+                ()-> assertNotEquals( null, orderList),
+                ()-> assertNotEquals(0,orderList.size())
 
 
         );
