@@ -7,7 +7,7 @@ A simple Spring boot application that demonstrates the usage of REST API using S
 * Java 21
 * Spring boot 3.3.2
 * PostgresSQL
-* JPA
+* Hibernate
 * Flyway
 * Maven
 * Docker
